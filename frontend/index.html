@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LiveOrder</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+<h2>Live Order Tracking</h2>
+
+<input id="item" placeholder="Item name" />
+<button onclick="createOrder()">Place Order</button>
+
+<h3>Live Updates</h3>
+<ul id="updates"></ul>
+
+<script>
+const socket = io("http://localhost:5000");
+
+socket.on("order_update", function(msg){
+  const li = document.createElement("li");
+  li.innerText = msg;
+  document.getElementById("updates").appendChild(li);
+});
+
+function createOrder(){
+  fetch("http://localhost:5000/order",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({item:document.getElementById("item").value})
+  })
+}
+</script>
+</body>
+</html>
+
